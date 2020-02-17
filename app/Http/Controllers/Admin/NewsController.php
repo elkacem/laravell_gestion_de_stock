@@ -31,7 +31,8 @@ class NewsController extends Controller
      */
     public function create()
     {
-        return view('admin.news.create');
+        $arr['categories'] = Category::all();
+        return view('admin.news.create')->with($arr);
     }
 
     /**
@@ -42,7 +43,7 @@ class NewsController extends Controller
      */
     public function store(Request $request,news $news)
     {
-        if($request->image->getClientOriginalName())
+        if(isset($request->image) && $request->image->getClientOriginalName())
         { 
             $ext = $request->image->getClientOriginalExtension();
             $file = date('Ymdhis').rand(1,99999).'.'.$ext;
@@ -53,6 +54,7 @@ class NewsController extends Controller
             $file = '';
         }
          $news->image = $file;
+         $news->category_id = $request->categroy_id;
          $news->title = $request->title;
          $news->author = $request->author;
          $news->desc = $request->desc;
@@ -79,6 +81,7 @@ class NewsController extends Controller
      */
     public function edit(news $news)
     {
+        $arr['categories'] = Category::all();
         $arr['news'] = $news;
         return view('admin.news.edit')->with($arr);
     }
@@ -107,6 +110,7 @@ class NewsController extends Controller
             
         }
          $news->image = $file;
+         $news->category_id = $request->categroy_id;
          $news->title = $request->title;
          $news->author = $request->author;
          $news->desc = $request->desc;
